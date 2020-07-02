@@ -112,3 +112,5 @@ cat ./Meghan_S6_L002_R1_001_aa.fastq.gzedited ./Meghan_S6_L002_R1_001_ab.fastq.g
 cat ./Meghan_S6_L002_R2_001_aa.fastq.gzedited ./Meghan_S6_L002_R2_001_ab.fastq.gzedited ./Meghan_S6_L002_R2_001_ac.fastq.gzedited ./Meghan_S6_L002_R2_001_ad.fastq.gzedited > reads_cat/Meghan_S6_L002_edited_R2.fastq
 
 # ---------- #
+
+### step 2b Demultiplexing
