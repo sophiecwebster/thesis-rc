@@ -3,10 +3,11 @@
 # /n/holyscratch01/hopkins_lab/webster/
 # ├── ipyrad/                             (all shell/python scripts and instructions)
 # └── radseq/                             (original zip file and (partially) unzipped fastq gzip files)
+#     ├── demultiplex/                    (entirety of step 2b's results, all demultiplexed files in stacks and rem)
 #     └── splits/                         (the 'aa, ab, etc' type fastq files, split for parallel processing)
 #         └── zipped/                     (the files zipped using pigz and edited zip files after moving Ns to header)
 #             └── reads_cat/              (part 2a.4, edited gzips concatenated)
-
+#
 
 ### step 2a MoveNs
 ## part 1
@@ -200,3 +201,17 @@ mv: cannot stat ‘demultiplex/stacks_2CF/*.2.fq’: No such file or directory
 37073404 retained reads (77.6%)
 
 # ------ #
+
+# output of 2b_run_stacks_1PR_example.sh on Meghan_S6_L001_edited_R1.fastq and Meghan_S6_L001_edited_R2.fastq
+# only thing that seemingly went wrong was this?
+# mv: cannot move ‘demultiplex/stacks_1PR/process_radtags.demultiplex.log’ to
+# 'logs/Meghan_S6_L002_edited_PR.log’: No such file or directory -- hopefully not a problem?
+# this happened both times (with *_L001_* and *_L002_*)
+
+50870570 total sequences
+10510108 barcode not found drops (20.7%)
+    1546 low quality read drops (0.0%)
+  936557 RAD cutsite not found drops (1.8%)
+39422359 retained reads (77.5%)
+
+# -------- #
