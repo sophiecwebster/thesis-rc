@@ -138,7 +138,7 @@ myhome="/n/holyscratch01/hopkins_lab/webster/ipyrad"
 
 # YOUR PREFIX HERE
 # this should match the beginning of the file names of your unzipped raw reads, which should end with '_R1.fastq' or '_R2.fastq'
-prefix="Meghan_S6_L00"
+prefix="Meghan_S6_L002"
 
 # YOUR BARCODES FILE HERE
 # column 1 = PstI barcode [tab], column 2 = MspI barcode [tab], column 3 = sample_name
@@ -155,8 +155,48 @@ module load gcc/7.1.0-fasrc01 stacks/2.4-fasrc01
 # make sure these scripts are named correctly, are in the correct directory ($myhome/scripts), and are executable
 
 ./2b_run_stacks_1PR_example.sh \
-  demultiplex/"$prefix"?_edited_R?.fastq \
+  demultiplex/"$prefix"_edited_R1.fastq \
+  demultiplex/"$prefix"_edited_R2.fastq \
   demultiplex/$barcodes
 
 ./2b_run_stacks_2CF_example.sh \
   demultiplex/stacks_1PR
+
+  # ----------------------------- #
+
+  #Let's see what went wrong here!
+
+  Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Invalid barcode on line 1: '@A00794:10:H7TL2DRXX:2:2101:1217:1031 1:N:0:ATTCG'
+mv: cannot stat ‘demultiplex/stacks_1PR/*.rem.*’: No such file or directory
+mv: cannot stat ‘demultiplex/stacks_1PR/process_radtags*’: No such file or directory
+mv: cannot stat ‘demultiplex/stacks_1PR/*.1.fq’: No such file or directory
+mv: cannot stat ‘demultiplex/stacks_1PR/*.2.fq’: No such file or directory
+Processing paired-end data.
+Searching for index oligo (i7 Illumina read).
+Found 1 paired input file(s).
+Processing file 1 of 1 [*_R1_*]
+  Reading data from:
+  demultiplex/stacks_1PR/*_R1_* and
+  demultiplex/stacks_1PR/*_R2_*
+Error opening input file 'demultiplex/stacks_1PR/*_R1_*'
+Error opening input file 'demultiplex/stacks_1PR/*_R2_*'
+Aborted. (basic_string::substr: __pos (which is 18446744073709551615) > this->size() (which is 6))
+mv: cannot stat ‘demultiplex/stacks_2CF/*.1.fq’: No such file or directory
+mv: cannot stat ‘demultiplex/stacks_2CF/*.2.fq’: No such file or directory
+
+# ------- #
+
+# okay, running this again, this time on just Meghan_S6_L001_edited_R1.fastq and Meghan_S6_L001_edited_R2.fastq
+# this is the output of 2b_run_stacks_1PR_example.sh ??? how'd we do
+
+47753136 total sequences
+ 9792218 barcode not found drops (20.5%)
+     465 low quality read drops (0.0%)
+  887049 RAD cutsite not found drops (1.9%)
+37073404 retained reads (77.6%)
+
+# ------ #
