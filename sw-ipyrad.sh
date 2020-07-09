@@ -268,3 +268,9 @@ done
 for f in A* ; do
   mv $f ${f:0:11}${f:17:500};
 done
+
+# fix names for R1/R2 unpaired columns
+
+for f in *.fastq ; do
+  mv $f "${f%.fastq}_unpaired.fastq";
+done
