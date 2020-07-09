@@ -230,3 +230,41 @@ for f in *.fastq; do mv $f "${f%.fastq}_L002.fastq"; done
 # using CF files (clone filtered), which have tossed out any PCR clones
 # PR files are just demultipexed (standing for 'process radtags')
 # so, using the contents of stacks_2CF_L001 and stacks_2CF_L002 in 2c_write_trimmomatic.xlsx
+
+# TODO before you run: PUT ALL CF FILES IN SAME FOLDER AND RUN FROM THERE !!
+# check what the names were ?
+
+# to fix my foolish error of changing the names twice, i used this:
+
+for f in A* ; do
+    b=${f:0:15}${f:20:500}
+    mv "$f" "$b"
+done
+
+# to rename the files for R1/R2 paired file column:
+
+for f in 1* ; do
+  mv $f "${f:0:8}${f:11:15}";
+done
+
+for f in 1* ; do
+    mv $f "${f}_.fastq";
+done
+
+for f in 1* ; do
+  mv $f ${f:0:12}${f:18:500};
+done
+
+# same thing, this time for files starting with "AA2"
+
+for f in A* ; do
+  mv $f ${f:0:7}${f:10:14};
+done
+
+for f in A* ; do
+    mv $f "${f}_.fastq";
+done
+
+for f in A* ; do
+  mv $f ${f:0:11}${f:17:500};
+done
