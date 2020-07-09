@@ -203,7 +203,7 @@ mv: cannot stat ‘demultiplex/stacks_2CF/*.2.fq’: No such file or directory
 
 # ------ #
 
-# output of 2b_run_stacks_1PR_example.sh on Meghan_S6_L001_edited_R1.fastq and Meghan_S6_L001_edited_R2.fastq
+# output of 2b_run_stacks_1PR_example.sh on Meghan_S6_L002_edited_R1.fastq and Meghan_S6_L002_edited_R2.fastq
 # only thing that seemingly went wrong was this?
 # mv: cannot move ‘demultiplex/stacks_1PR/process_radtags.demultiplex.log’ to
 # 'logs/Meghan_S6_L002_edited_PR.log’: No such file or directory -- hopefully not a problem?
@@ -218,23 +218,15 @@ mv: cannot stat ‘demultiplex/stacks_2CF/*.2.fq’: No such file or directory
 # -------- #
 
 # step 2c: trimming
+# using 2c_write_trimmomatic.xlsx to create giant series of commands for each demultiplexed file.
 
-#!/bin/bash
+# renamed the files with these scripts, for the L001 and L002 files respectively:
+# (just appending L001 or L002 on the end because otherwise their numbers are the same
+# (because i ran them separately in step 2b!))
 
-# do this on an interactive node
-srun -p test -n 1 -N 1 --pty --mem 4000 -t 0-04:00 /bin/bash
+for f in *.fastq; do mv $f "${f%.fastq}_L001.fastq"; done
+for f in *.fastq; do mv $f "${f%.fastq}_L002.fastq"; done
 
-# load Java module
-module load jdk/10.0.1-fasrc01
-
-# set working directory
-cd /n/holyscratch01/hopkins_lab/[you]/ipyrad/trimmomatic
-
-# download trimmomatic
-wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.35.zip
-
-# unzip
-unzip Trimmomatic-0.35.zip
-
-# move illumina parameters file to working directory
-cp /n/holyscratch01/hopkins_lab/[you]/ipyrad/trimmomatic/Trimmomatic-0.35/adapters/TruSeq3-PE.fa /n/holyscratch01/hopkins_lab/[you]/ipyrad/trimmomatic/ ### this just puts this file into your working directory
+# using CF files (clone filtered), which have tossed out any PCR clones
+# PR files are just demultipexed (standing for 'process radtags')
+# so, using the contents of stacks_2CF_L001 and stacks_2CF_L002 in 2c_write_trimmomatic.xlsx
