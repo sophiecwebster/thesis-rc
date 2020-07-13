@@ -5,6 +5,9 @@
 # │    └── trimmomatic/                    (trimmomatic tools)
 # └── radseq/                             (original zip file and (partially) unzipped fastq gzip files)
 #     ├── demultiplex/                    (entirety of step 2b's results, all demultiplexed files in stacks and rem)
+#     ├── trimmed/                        (products of step 2c: trimmomatic)
+#     │   ├── trim_paired/
+#     │   └── trim_unpaired/
 #     └── splits/                         (the 'aa, ab, etc' type fastq files, split for parallel processing)
 #         └── zipped/                     (the files zipped using pigz and edited zip files after moving Ns to header)
 #             └── reads_cat/              (part 2a.4, edited gzips concatenated)
@@ -436,3 +439,5 @@ java -jar Trimmomatic-0.35/trimmomatic-0.35.jar PE -phred33 1077_R1_CF_L002.fast
 java -jar Trimmomatic-0.35/trimmomatic-0.35.jar PE -phred33 AA2_R1_CF_L002.fastq AA2_R2_CF_L002.fastq /n/holyscratch01/hopkins_lab/webster/ipyrad/trimmomatic/trim_paired/AA2_R1_L002_.fastq /n/holyscratch01/hopkins_lab/webster/ipyrad/trimmomatic/trim_unpaired/AA2_R1_CF_L002_unpaired.fastq /n/holyscratch01/hopkins_lab/webster/ipyrad/trimmomatic/trim_paired/AA2_R2_L002_.fastq /n/holyscratch01/hopkins_lab/webster/ipyrad/trimmomatic/trim_unpaired/AA2_R2_CF_L002_unpaired.fastq ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
 
 # -------------------------------------------- #
+
+# step 3: running ipyrad !
