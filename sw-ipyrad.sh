@@ -8,6 +8,8 @@
 #     ├── trimmed/                        (products of step 2c: trimmomatic)
 #     │   ├── trim_paired/
 #     │   └── trim_unpaired/
+#     ├── ipyRAD_assembly01/              ()
+#     ├── sorted_fastqs/                  ()
 #     └── splits/                         (the 'aa, ab, etc' type fastq files, split for parallel processing)
 #         └── zipped/                     (the files zipped using pigz and edited zip files after moving Ns to header)
 #             └── reads_cat/              (part 2a.4, edited gzips concatenated)
@@ -441,3 +443,5 @@ java -jar Trimmomatic-0.35/trimmomatic-0.35.jar PE -phred33 AA2_R1_CF_L002.fastq
 # -------------------------------------------- #
 
 # step 3: running ipyrad !
+# locale is /n/holyscratch01/hopkins_lab/webster/radseq/ipyRAD_assembly01
+# env is ipyrad01
