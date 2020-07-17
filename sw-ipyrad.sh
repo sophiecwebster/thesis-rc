@@ -548,3 +548,46 @@ sleep 60
 cd /n/holyscratch01/hopkins_lab/webster/radseq/ipyRAD_assembly01
 
 ipyrad -p params.txt -s 45 --ipcluster
+
+## okay, looks like after steps 4 and 5, 54 (55?) samples got tossed.
+
+# run steps 6 and 7
+
+#!/bin/bash
+
+#SBATCH -n 20                    # Number of cores
+#SBATCH -N 1                    # Ensure that all cores are on one machine
+#SBATCH -t 7-00:00              # Runtime in D-HH:MM
+#SBATCH -p shared		        # Partition to submit to
+#SBATCH --mem=64000             # Memory pool for all cores (see also --mem-per-cpu)
+#SBATCH -o ipyrad_s3_%A.out      # File to which STDOUT will be written
+#SBATCH -e ipyrad_s3_%A.err      # File to which STDERR will be written
+#SBATCH --mail-type=ALL         # Type of email notification- BEGIN,END,FAIL,ALL
+#SBATCH --mail-user=sophiewebster@college.harvard.edu      # Email to which notifications will be sent
+
+source activate ipyrad01
+ipcluster start --n 20 --daemonize
+sleep 60
+cd /n/holyscratch01/hopkins_lab/webster/radseq/ipyRAD_assembly01
+
+ipyrad -p params.txt -s 67 --ipcluster
+
+# feedback from steps 6 & 7
+
+Step 6: Clustering/Mapping across samples
+skipping samples not in state==5:
+['1012L001_', '1012L002_', '1013L001_', '1013L002_', '1014L001_', '1014L002_', '1015L001_', '1021L001_', '1021L002_', '1022L001_', '1022L002_', '1023L002_', '1025L001_', '1025L002_', '1029L001_', '1029L002_', '1031L001_', '1031L002_', '1032L001_', '1033L002_', '1036L002_', '1037L001_', '1037L002_', '1038L001_', '1040L001_', '1040L002_', '1041L002_', '1044L001_', '1044L002_', '1045L001_', '1045L002_', '1049L002_', '1050L001_', '1053L001_', '1053L002_', '1054L001_', '1054L002_', '1055L001_', '1055L002_', '1057L001_', '1057L002_', '1058L001_', '1060L002_', '1061L001_', '1061L002_', '1062L001_', '1062L002_', '1068L002_', '1069L002_', '1070L001_', '1071L001_', '1071L002_', '1076L001_', '1077L001_', '1077L002_', 'AA2L001_', 'AA2L002_']
+[####################] 100% 0:00:10 | concatenating inputs
+[####################] 100% 0:02:27 | clustering across
+[####################] 100% 0:00:19 | building clusters
+[####################] 100% 0:07:52 | aligning clusters
+
+Step 7: Filtering and formatting output files
+
+Encountered an Error.
+Message:
+There are samples in this assembly that were not present in step 6. This is
+likely due to failed samples retained in the assembly from prior to step 5, or
+branching/merging. The following samples are not in the step6 database:
+{'1012L001_', '1029L001_', '1061L002_', '1031L001_', '1040L001_', '1033L002_', '1071L002_', '1023L002_', '1049L002_', '1076L001_', '1055L001_', '1022L002_', '1057L001_', '1031L002_', '1036L002_', '1021L002_', '1062L001_', '1040L002_', '1022L001_', '1069L002_', '1061L001_', '1054L002_', '1029L002_', '1053L001_', '1057L002_', '1077L001_', '1013L002_', '1044L002_', 'AA2L001_', '1071L001_', '1014L002_', 'AA2L002_', '1013L001_', '1068L002_', '1037L002_', '1058L001_', '1021L001_', '1054L001_', '1077L002_', '1044L001_', '1038L001_', '1055L002_', '1032L001_', '1050L001_', '1070L001_', '1045L002_', '1015L001_', '1037L001_', '1045L001_', '1012L002_', '1060L002_', '1025L002_', '1062L002_', '1041L002_', '1014L001_', '1025L001_', '1053L002_'}
+Simplest solution is to branch and remove these from the assembly.
