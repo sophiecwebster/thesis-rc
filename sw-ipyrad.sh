@@ -446,11 +446,17 @@ java -jar Trimmomatic-0.35/trimmomatic-0.35.jar PE -phred33 AA2_R1_CF_L002.fastq
 # locale is /n/holyscratch01/hopkins_lab/webster/radseq/ipyRAD_assembly01
 # env is ipyrad01
 
+### IMPORTANT NOTICES ###
+# 1. Do not include parameters [2] or [3] (you've already demultiplexed, silly!)
+# 2. Make sure you control parallelization by hand with ipcluster (otherwise, Odyssey nodes seem to be starting too slowly
+#    and ipyrad quits)
+# 3. Make sure you've activated conda and are in your environment!
+
 # run steps 1 and 2
 
 #!/bin/bash
 
-#SBATCH -n 8                    # Number of cores
+#SBATCH -n 20                    # Number of cores
 #SBATCH -N 1                    # Ensure that all cores are on one machine
 #SBATCH -t 2-00:00              # Runtime in D-HH:MM
 #SBATCH -p shared		            # Partition to submit to
@@ -460,18 +466,21 @@ java -jar Trimmomatic-0.35/trimmomatic-0.35.jar PE -phred33 AA2_R1_CF_L002.fastq
 #SBATCH --mail-type=ALL         # Type of email notification- BEGIN,END,FAIL,ALL
 #SBATCH --mail-user=sophiewebster@college.harvard.edu      # Email to which notifications will be sent
 
+module load Anaconda3/5.0.1-fasrc02
 source activate ipyrad01
+ipcluster start --n 20 --daemonize
+sleep 60
 
 cd /n/holyscratch01/hopkins_lab/webster/radseq/ipyRAD_assembly01
 
-ipyrad -p params-assembly1.txt -s 12
+ipyrad -p params.txt -s 12 --ipcluster
 
 
 # run step 3 (the Big Cahuna)
 
 #!/bin/bash
 
-#SBATCH -n 8                    # Number of cores
+#SBATCH -n 20                    # Number of cores
 #SBATCH -N 1                    # Ensure that all cores are on one machine
 #SBATCH -t 7-00:00              # Runtime in D-HH:MM
 #SBATCH -p shared		        # Partition to submit to
@@ -482,10 +491,11 @@ ipyrad -p params-assembly1.txt -s 12
 #SBATCH --mail-user=sophiewebster@college.harvard.edu      # Email to which notifications will be sent
 
 source activate ipyrad01
-
+ipcluster start --n 20 --daemonize
+sleep 60
 cd /n/holyscratch01/hopkins_lab/webster/radseq/ipyRAD_assembly01
 
-ipyrad -p params-assembly1.txt -s 3
+ipyrad -p params.txt -s 3 --ipcluster
 
 
 # errors?
@@ -518,7 +528,23 @@ ipyrad.assemble.utils.IPyradError:
 # resolved because it was unnecessary to specify barcodes!
 awk '$3=$3"L001_"'
 
-### IMPORTANT NOTICES ###
-# 1. Do not include parameters [2] or [3] (you've already demultiplexed, silly!)
-# 2. Make sure you control parallelization by hand with ipcluster (otherwise, Odyssey nodes seem to be starting too slowly
-#    and ipyrad quits)
+# run steps 4 and 5
+
+#!/bin/bash
+
+#SBATCH -n 20                    # Number of cores
+#SBATCH -N 1                    # Ensure that all cores are on one machine
+#SBATCH -t 7-00:00              # Runtime in D-HH:MM
+#SBATCH -p shared		        # Partition to submit to
+#SBATCH --mem=64000             # Memory pool for all cores (see also --mem-per-cpu)
+#SBATCH -o ipyrad_s3_%A.out      # File to which STDOUT will be written
+#SBATCH -e ipyrad_s3_%A.err      # File to which STDERR will be written
+#SBATCH --mail-type=ALL         # Type of email notification- BEGIN,END,FAIL,ALL
+#SBATCH --mail-user=sophiewebster@college.harvard.edu      # Email to which notifications will be sent
+
+source activate ipyrad01
+ipcluster start --n 20 --daemonize
+sleep 60
+cd /n/holyscratch01/hopkins_lab/webster/radseq/ipyRAD_assembly01
+
+ipyrad -p params.txt -s 45 --ipcluster
