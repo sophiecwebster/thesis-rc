@@ -8,8 +8,8 @@
 #     ├── trimmed/                        (products of step 2c: trimmomatic)
 #     │   ├── trim_paired/
 #     │   └── trim_unpaired/
-#     ├── ipyRAD_assembly01/              ()
-#     ├── sorted_fastqs/                  ()
+#     ├── ipyRAD_assembly01/              (houses the assembly)
+#     ├── sorted_fastqs/                  (trim_paired fastq files, ready for assembly!)
 #     └── splits/                         (the 'aa, ab, etc' type fastq files, split for parallel processing)
 #         └── zipped/                     (the files zipped using pigz and edited zip files after moving Ns to header)
 #             └── reads_cat/              (part 2a.4, edited gzips concatenated)
@@ -445,3 +445,80 @@ java -jar Trimmomatic-0.35/trimmomatic-0.35.jar PE -phred33 AA2_R1_CF_L002.fastq
 # step 3: running ipyrad !
 # locale is /n/holyscratch01/hopkins_lab/webster/radseq/ipyRAD_assembly01
 # env is ipyrad01
+
+# run steps 1 and 2
+
+#!/bin/bash
+
+#SBATCH -n 8                    # Number of cores
+#SBATCH -N 1                    # Ensure that all cores are on one machine
+#SBATCH -t 2-00:00              # Runtime in D-HH:MM
+#SBATCH -p shared		            # Partition to submit to
+#SBATCH --mem=48000             # Memory pool for all cores (see also --mem-per-cpu)
+#SBATCH -o ipyrad_s12_%A.out    # File to which STDOUT will be written
+#SBATCH -e ipyrad_s12_%A.err    # File to which STDERR will be written
+#SBATCH --mail-type=ALL         # Type of email notification- BEGIN,END,FAIL,ALL
+#SBATCH --mail-user=sophiewebster@college.harvard.edu      # Email to which notifications will be sent
+
+source activate ipyrad01
+
+cd /n/holyscratch01/hopkins_lab/webster/radseq/ipyRAD_assembly01
+
+ipyrad -p params-assembly1.txt -s 12
+
+
+# run step 3 (the Big Cahuna)
+
+#!/bin/bash
+
+#SBATCH -n 8                    # Number of cores
+#SBATCH -N 1                    # Ensure that all cores are on one machine
+#SBATCH -t 7-00:00              # Runtime in D-HH:MM
+#SBATCH -p shared		        # Partition to submit to
+#SBATCH --mem=64000             # Memory pool for all cores (see also --mem-per-cpu)
+#SBATCH -o ipyrad_s3_%A.out      # File to which STDOUT will be written
+#SBATCH -e ipyrad_s3_%A.err      # File to which STDERR will be written
+#SBATCH --mail-type=ALL         # Type of email notification- BEGIN,END,FAIL,ALL
+#SBATCH --mail-user=sophiewebster@college.harvard.edu      # Email to which notifications will be sent
+
+source activate ipyrad01
+
+cd /n/holyscratch01/hopkins_lab/webster/radseq/ipyRAD_assembly01
+
+ipyrad -p params-assembly1.txt -s 3
+
+
+# errors?
+# edit: resolved by manually controlling ipcluster
+
+Warning: technical replicates (same name) present.
+
+-------------------------------------------------------------
+ipyrad [v.0.9.50]
+Interactive assembly and analysis of RAD-seq data
+-------------------------------------------------------------
+
+Encountered an Error.
+Message:
+ipcluster not found, use 'auto=True' or see docs.
+[swebster@boslogin01 ipyrad]$ cd ..
+
+ # AND #
+
+ipyrad.assemble.utils.IPyradError:
+            Could not find saved Assembly file (.json) in expected location.
+            Checks in: [project_dir]/[assembly_name].json
+            Checked: /n/holyscratch01/hopkins_lab/webster/radseq/ipyRAD_assembly01/assembly1.json
+
+
+            So for example a sample called WatDo_PipPrep_R1_100.fq.gz must
+                be referenced in the barcode file as WatDo_PipPrep_100.
+
+# fixing my errors (this time, barcodes being named wrong cuz of L001 and L002)
+# resolved because it was unnecessary to specify barcodes!
+awk '$3=$3"L001_"'
+
+### IMPORTANT NOTICES ###
+# 1. Do not include parameters [2] or [3] (you've already demultiplexed, silly!)
+# 2. Make sure you control parallelization by hand with ipcluster (otherwise, Odyssey nodes seem to be starting too slowly
+#    and ipyrad quits)
