@@ -591,3 +591,21 @@ likely due to failed samples retained in the assembly from prior to step 5, or
 branching/merging. The following samples are not in the step6 database:
 {'1012L001_', '1029L001_', '1061L002_', '1031L001_', '1040L001_', '1033L002_', '1071L002_', '1023L002_', '1049L002_', '1076L001_', '1055L001_', '1022L002_', '1057L001_', '1031L002_', '1036L002_', '1021L002_', '1062L001_', '1040L002_', '1022L001_', '1069L002_', '1061L001_', '1054L002_', '1029L002_', '1053L001_', '1057L002_', '1077L001_', '1013L002_', '1044L002_', 'AA2L001_', '1071L001_', '1014L002_', 'AA2L002_', '1013L001_', '1068L002_', '1037L002_', '1058L001_', '1021L001_', '1054L001_', '1077L002_', '1044L001_', '1038L001_', '1055L002_', '1032L001_', '1050L001_', '1070L001_', '1045L002_', '1015L001_', '1037L001_', '1045L001_', '1012L002_', '1060L002_', '1025L002_', '1062L002_', '1041L002_', '1014L001_', '1025L001_', '1053L002_'}
 Simplest solution is to branch and remove these from the assembly.
+
+# yikes. a lot of these files seem quite small!
+
+# simple loop for plucking out # of lines.
+
+ls -lh | awk '{print $5" "$9}' | tail -n 135 > names.txt
+
+for f in *.fastq ; do
+  cat $f | wc -l;
+done > check.txt
+
+# for egrepping purposes, here are the misbegotten files (see line 592, or step 7 error message)
+egrep "1012|1029|1061|1031|1040|1033|1071|1023|1049|1076|1055|1022|1057|1031|1036|1021|1062|1040|1022|1069|1061|1054|1029|1053|1057|1077|1013|1044|AA2|1071|1014|AA2|1013|1068|1037|1058|1021|1054|1077|1044|1038|1055|1032|1050|1070|1045|1015|1037|1045|1012|1060|1025|1062|1041|1014|1025|1053"
+
+# running assembly 2
+# steps 1 and 2 generates assembly2_edits, assembly2.json, and assembly2_s1_demultiplex_stats.txt
+# step 3 generates assembly2_clust_0.85/
+# step 4 and 5 generate assembly2-tmpdir/
